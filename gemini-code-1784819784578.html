@@ -1,0 +1,877 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bài Kiểm Tra Phát Âm & Trọng Âm - Ms Lê Hằng English</title>
+    <!-- Import Font Bo Tròn Chuẩn Học Đường 'Quicksand' -->
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Quicksand', sans-serif;
+        }
+
+        /* 1. BACKGROUND XANH LÁ HỌA TIẾT NGÔI SAO & CHẤM TRÒN */
+        body {
+            background-color: #A1DE76;
+            background-image: 
+                radial-gradient(rgba(255, 255, 255, 0.25) 20%, transparent 20%),
+                radial-gradient(rgba(255, 255, 255, 0.18) 20%, transparent 20%);
+            background-size: 40px 40px;
+            background-position: 0 0, 20px 20px;
+            min-height: 100vh;
+            padding: 20px 10px;
+            color: #333;
+            position: relative;
+        }
+
+        .star-pattern {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" viewBox="0 0 24 24" fill="rgba(255,255,255,0.15)"><path d="M12 1.7l3.09 6.26 6.91 1-5 4.87 1.18 6.88L12 17.27l-6.18 3.25L7 13.83 2 8.96l6.91-1z"/></svg>');
+            background-size: 100px 100px;
+        }
+
+        .container {
+            max-width: 780px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* 2. HEADER & LỜI NHẮC */
+        header {
+            text-align: center;
+            margin-bottom: 12px;
+        }
+
+        .teacher-badge {
+            background: #FFFFFF;
+            color: #7C3AED;
+            font-size: 1rem;
+            font-weight: 700;
+            padding: 8px 28px;
+            border-radius: 25px;
+            display: inline-block;
+            box-shadow: 0 3px 8px rgba(0,0,0,0.08);
+            border: 2px solid #E9D5FF;
+        }
+
+        .warning-card {
+            background: #FFFBEB;
+            border: 2px dashed #F59E0B;
+            border-radius: 16px;
+            padding: 14px 20px;
+            margin-bottom: 20px;
+            text-align: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        }
+
+        .warning-title {
+            color: #D97706;
+            font-weight: 800;
+            font-size: 1.05rem;
+            margin-bottom: 4px;
+        }
+
+        .warning-body {
+            color: #4B5563;
+            font-size: 0.88rem;
+            font-weight: 600;
+            line-height: 1.5;
+        }
+
+        .warning-highlight {
+            color: #D97706;
+            font-weight: 800;
+            display: block;
+            margin-top: 4px;
+        }
+
+        /* 3. QUESTION CARD STRUCTURE */
+        .question-card {
+            background: #FFFFFF;
+            border-radius: 20px;
+            padding: 22px;
+            margin-bottom: 22px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+        }
+
+        .question-header {
+            background: #8B52CC;
+            color: white;
+            padding: 12px 18px;
+            border-radius: 12px;
+            margin-bottom: 16px;
+        }
+
+        .question-num {
+            font-size: 1.05rem;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 6px;
+        }
+
+        .word-list-preview {
+            font-size: 0.98rem;
+            letter-spacing: 0.5px;
+            text-align: center;
+            background: rgba(255, 255, 255, 0.15);
+            padding: 6px;
+            border-radius: 6px;
+            font-weight: 600;
+        }
+
+        .word-list-preview u {
+            text-decoration: underline;
+            text-underline-offset: 3px;
+            font-weight: 800;
+            color: #FFE082;
+        }
+
+        /* 4. FULL-WIDTH OPTIONS LIST */
+        .options-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .option-btn {
+            background: #FFFFFF;
+            border: 2px solid #E5E7EB;
+            border-bottom: 4px solid #D1D5DB;
+            color: #374151;
+            padding: 13px 18px;
+            border-radius: 14px;
+            font-size: 0.98rem;
+            font-weight: 700;
+            text-align: left;
+            cursor: pointer;
+            transition: all 0.12s ease;
+            outline: none;
+        }
+
+        .option-btn u {
+            color: #D32F2F;
+            text-decoration: underline;
+            text-underline-offset: 3px;
+            font-weight: 800;
+        }
+
+        .option-btn:hover:not(:disabled) {
+            border-color: #C084FC;
+            background: #FAF5FF;
+        }
+
+        .option-btn:disabled {
+            cursor: default;
+        }
+
+        /* Correct & Wrong States */
+        .option-btn.correct {
+            background: #00C853 !important;
+            border-color: #00E676 !important;
+            border-bottom: 4px solid #00A142 !important;
+            color: #FFFFFF !important;
+        }
+
+        .option-btn.correct u {
+            color: #FFFFFF !important;
+        }
+
+        .option-btn.wrong {
+            background: #FF5252 !important;
+            border-color: #FF1744 !important;
+            border-bottom: 4px solid #D50000 !important;
+            color: #FFFFFF !important;
+        }
+
+        .option-btn.wrong u {
+            color: #FFFFFF !important;
+        }
+
+        /* 5. KHUNG GIẢI THÍCH CHI TIẾT TÍM NHẠT */
+        .explanation-card {
+            display: none;
+            background: #F0F2F9;
+            border-left: 6px solid #8B52CC;
+            border-radius: 12px;
+            padding: 18px;
+            margin-top: 15px;
+            animation: slideDown 0.3s ease-out;
+        }
+
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .exp-header {
+            color: #8B52CC;
+            font-weight: 800;
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+        }
+
+        .exp-content {
+            font-size: 0.9rem;
+            color: #374151;
+            line-height: 1.6;
+        }
+
+        .exp-content p {
+            margin-bottom: 6px;
+        }
+
+        .exp-word {
+            color: #1976D2;
+            font-weight: 700;
+        }
+
+        .exp-ipa {
+            background: #EDE7F6;
+            color: #673AB7;
+            padding: 2px 7px;
+            border-radius: 5px;
+            font-family: 'Consolas', monospace;
+            font-weight: 700;
+            font-size: 0.9rem;
+        }
+
+        .exp-meaning {
+            color: #E65100;
+        }
+
+        .exp-reason {
+            background: #FFFFFF;
+            padding: 10px 14px;
+            border-radius: 8px;
+            margin-top: 10px;
+            border-left: 4px solid #A1DE76;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.03);
+        }
+
+        .submit-container {
+            text-align: center;
+            margin: 35px 0 20px;
+        }
+
+        .final-btn {
+            background: #FF9800;
+            color: white;
+            border: none;
+            border-bottom: 5px solid #E65100;
+            padding: 15px 36px;
+            font-size: 1.1rem;
+            font-weight: 800;
+            border-radius: 30px;
+            cursor: pointer;
+            box-shadow: 0 6px 18px rgba(0,0,0,0.15);
+            transition: all 0.15s ease;
+        }
+
+        .final-btn:hover {
+            background: #F57C00;
+            transform: translateY(-2px);
+        }
+
+        /* Modal Popup Score */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: 100;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-card {
+            background: white;
+            padding: 30px 24px;
+            border-radius: 24px;
+            text-align: center;
+            max-width: 420px;
+            width: 90%;
+            box-shadow: 0 12px 30px rgba(0,0,0,0.25);
+            animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        @keyframes popIn {
+            from { transform: scale(0.7); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        .modal-title {
+            color: #8B52CC;
+            font-size: 1.4rem;
+            font-weight: 800;
+            margin-bottom: 10px;
+        }
+
+        .modal-score {
+            font-size: 2.8rem;
+            font-weight: 800;
+            color: #FF9800;
+            margin: 12px 0;
+        }
+
+        .modal-praise {
+            font-size: 0.98rem;
+            color: #4B5563;
+            margin-bottom: 20px;
+            line-height: 1.4;
+        }
+
+        .close-btn {
+            background: #8B52CC;
+            color: white;
+            border: none;
+            padding: 12px 28px;
+            border-radius: 25px;
+            font-size: 0.95rem;
+            font-weight: 700;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="star-pattern"></div>
+
+    <div class="container">
+        <header>
+            <div class="teacher-badge">Giáo viên tạo: Ms Lê Hằng English</div>
+        </header>
+
+        <div class="warning-card">
+            <div class="warning-title">⚠️ LỜI NHẮC CỰC KỲ QUAN TRỌNG ⚠️</div>
+            <div class="warning-body">
+                Chỉ có đọc kỹ giải thích ngay sau mỗi câu, sau đó ghi lại từ vựng/cấu trúc mới vào vở để học thì mới thực sự giỏi lên.<br>
+                Làm cho xong mà không đọc giải thích hay đọc qua loa không ghi chép thì chỉ tốn thời gian vô ích!
+                <span class="warning-highlight">* Kéo tới đâu, làm tới đó! *</span>
+            </div>
+        </div>
+
+        <div id="quiz-container"></div>
+
+        <div class="submit-container">
+            <button class="final-btn" onclick="showSummary()">TỔNG KẾT KẾT QUẢ 🏆</button>
+        </div>
+    </div>
+
+    <!-- Modal Popup Score -->
+    <div class="modal-overlay" id="scoreModal">
+        <div class="modal-card">
+            <div class="modal-title">🎉 TỔNG KẾT BÀI TEST</div>
+            <div class="modal-score" id="scoreText">0 / 15</div>
+            <div class="modal-praise" id="praiseText">Hãy cố gắng hơn nữa nhé!</div>
+            <button class="close-btn" onclick="closeModal()">Đóng & Kiểm tra lại</button>
+        </div>
+    </div>
+
+    <script>
+        // Web Audio API Sound Generator
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        let audioCtx = null;
+
+        function initAudio() {
+            if (!audioCtx) {
+                audioCtx = new AudioContext();
+            }
+        }
+
+        function playCorrectSound() {
+            initAudio();
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(523.25, audioCtx.currentTime);
+            osc.frequency.exponentialRampToValueAtTime(659.25, audioCtx.currentTime + 0.12);
+            osc.frequency.exponentialRampToValueAtTime(783.99, audioCtx.currentTime + 0.25);
+            
+            gain.gain.setValueAtTime(0.25, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.35);
+            
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.start();
+            osc.stop(audioCtx.currentTime + 0.35);
+        }
+
+        function playWrongSound() {
+            initAudio();
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.type = 'sawtooth';
+            osc.frequency.setValueAtTime(220, audioCtx.currentTime);
+            osc.frequency.setValueAtTime(160, audioCtx.currentTime + 0.15);
+            
+            gain.gain.setValueAtTime(0.25, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.32);
+            
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.start();
+            osc.stop(audioCtx.currentTime + 0.32);
+        }
+
+        // Quiz Data - Complete 15 Questions (Ex1 & Ex2)
+        const quizData = [
+            // EX1
+            {
+                id: 1,
+                instruction: "Choose the word which has a different sound in the part underlined.",
+                previewText: "<u>p</u>encil   |   <u>p</u>ocket   |   <u>b</u>oy   |   <u>p</u>ostcard",
+                options: [
+                    { html: "A. <u>p</u>encil", text: "A. pencil", isCorrect: false },
+                    { html: "B. <u>p</u>ocket", text: "B. pocket", isCorrect: false },
+                    { html: "C. <u>b</u>oy", text: "C. boy", isCorrect: true },
+                    { html: "D. <u>p</u>ostcard", text: "D. postcard", isCorrect: false }
+                ],
+                explanationHtml: `
+                    <p><strong>1. Phân tích 4 đáp án:</strong></p>
+                    <p>• <span class="exp-word">pencil</span> (n) <span class="exp-ipa">[ /ˈpensl/ ]</span>: <span class="exp-meaning">bút chì</span>.</p>
+                    <p>• <span class="exp-word">pocket</span> (n) <span class="exp-ipa">[ /ˈpɒkɪt/ ]</span>: <span class="exp-meaning">túi áo/quần</span>.</p>
+                    <p>• <span class="exp-word">boy</span> (n) <span class="exp-ipa">[ /bɔɪ/ ]</span>: <span class="exp-meaning">cậu bé</span>.</p>
+                    <p>• <span class="exp-word">postcard</span> (n) <span class="exp-ipa">[ /ˈpəʊstkɑːd/ ]</span>: <span class="exp-meaning">bưu thiếp</span>.</p>
+                    <div class="exp-reason">
+                        <strong>2. Tại sao chọn boy?</strong><br>
+                        Phần gạch chân ở <em>boy</em> phát âm là âm hữu thanh <span class="exp-ipa">[ /b/ ]</span>, trong khi các từ còn lại phát âm là âm vô thanh <span class="exp-ipa">[ /p/ ]</span>.
+                    </div>
+                `
+            },
+            {
+                id: 2,
+                instruction: "Choose the word which has a different sound in the part underlined.",
+                previewText: "sh<u>y</u>   |   prett<u>y</u>   |   curl<u>y</u>   |   pon<u>y</u>",
+                options: [
+                    { html: "A. sh<u>y</u>", text: "A. shy", isCorrect: true },
+                    { html: "B. prett<u>y</u>", text: "B. pretty", isCorrect: false },
+                    { html: "C. curl<u>y</u>", text: "C. curly", isCorrect: false },
+                    { html: "D. pon<u>y</u>", text: "D. pony", isCorrect: false }
+                ],
+                explanationHtml: `
+                    <p><strong>1. Phân tích 4 đáp án:</strong></p>
+                    <p>• <span class="exp-word">shy</span> (adj) <span class="exp-ipa">[ /ʃaɪ/ ]</span>: <span class="exp-meaning">nhút nhát</span>.</p>
+                    <p>• <span class="exp-word">pretty</span> (adj) <span class="exp-ipa">[ /ˈprɪti/ ]</span>: <span class="exp-meaning">xinh đẹp</span>.</p>
+                    <p>• <span class="exp-word">curly</span> (adj) <span class="exp-ipa">[ /ˈkɜːli/ ]</span>: <span class="exp-meaning">xoăn (tóc)</span>.</p>
+                    <p>• <span class="exp-word">pony</span> (n) <span class="exp-ipa">[ /ˈpəʊni/ ]</span>: <span class="exp-meaning">ngựa nhỏ</span>.</p>
+                    <div class="exp-reason">
+                        <strong>2. Tại sao chọn shy?</strong><br>
+                        Phần 'y' ở <em>shy</em> phát âm là nguyên âm đôi <span class="exp-ipa">[ /aɪ/ ]</span>, các từ còn lại 'y' ở cuối từ phát âm là <span class="exp-ipa">[ /i/ ]</span>.
+                    </div>
+                `
+            },
+            {
+                id: 3,
+                instruction: "Choose the word which has a different sound in the part underlined.",
+                previewText: "play<u>s</u>   |   talk<u>s</u>   |   remember<u>s</u>   |   pon<u>y</u>",
+                options: [
+                    { html: "A. play<u>s</u>", text: "A. plays", isCorrect: false },
+                    { html: "B. talk<u>s</u>", text: "B. talks", isCorrect: true },
+                    { html: "C. remember<u>s</u>", text: "C. remembers", isCorrect: false },
+                    { html: "D. pon<u>y</u>", text: "D. pony", isCorrect: false }
+                ],
+                explanationHtml: `
+                    <p><strong>1. Phân tích 4 đáp án:</strong></p>
+                    <p>• <span class="exp-word">plays</span> (v) <span class="exp-ipa">[ /pleɪz/ ]</span>: <span class="exp-meaning">chơi (kết thúc nguyên âm -> s đọc /z/)</span>.</p>
+                    <p>• <span class="exp-word">talks</span> (v) <span class="exp-ipa">[ /tɔːks/ ]</span>: <span class="exp-meaning">nói chuyện (kết thúc âm /k/ -> s đọc /s/)</span>.</p>
+                    <p>• <span class="exp-word">remembers</span> (v) <span class="exp-ipa">[ /rɪˈmembəz/ ]</span>: <span class="exp-meaning">nhớ (kết thúc nguyên âm -> s đọc /z/)</span>.</p>
+                    <p>• <span class="exp-word">pony</span> (n) <span class="exp-ipa">[ /ˈpəʊni/ ]</span>: <span class="exp-meaning">ngựa con</span>.</p>
+                    <div class="exp-reason">
+                        <strong>2. Tại sao chọn talks?</strong><br>
+                        Đuôi 's' ở <em>talks</em> phát âm là <span class="exp-ipa">[ /s/ ]</span> do đứng sau âm vô thanh /k/, khác với các đuôi 's' phát âm là <span class="exp-ipa">[ /z/ ]</span>.
+                    </div>
+                `
+            },
+            {
+                id: 4,
+                instruction: "Choose the word which has a different sound in the part underlined.",
+                previewText: "bed<u>s</u>   |   clock<u>s</u>   |   wall<u>s</u>   |   table<u>s</u>",
+                options: [
+                    { html: "A. bed<u>s</u>", text: "A. beds", isCorrect: false },
+                    { html: "B. clock<u>s</u>", text: "B. clocks", isCorrect: true },
+                    { html: "C. wall<u>s</u>", text: "C. walls", isCorrect: false },
+                    { html: "D. table<u>s</u>", text: "D. tables", isCorrect: false }
+                ],
+                explanationHtml: `
+                    <p><strong>1. Phân tích 4 đáp án:</strong></p>
+                    <p>• <span class="exp-word">beds</span> (n) <span class="exp-ipa">[ /bedz/ ]</span>: <span class="exp-meaning">giường (kết thúc âm /d/ -> s đọc /z/)</span>.</p>
+                    <p>• <span class="exp-word">clocks</span> (n) <span class="exp-ipa">[ /klɒks/ ]</span>: <span class="exp-meaning">đồng hồ (kết thúc âm /k/ -> s đọc /s/)</span>.</p>
+                    <p>• <span class="exp-word">walls</span> (n) <span class="exp-ipa">[ /wɔːlz/ ]</span>: <span class="exp-meaning">bức tường (kết thúc âm /l/ -> s đọc /z/)</span>.</p>
+                    <p>• <span class="exp-word">tables</span> (n) <span class="exp-ipa">[ /ˈteɪblz/ ]</span>: <span class="exp-meaning">cái bàn (kết thúc âm /l/ -> s đọc /z/)</span>.</p>
+                    <div class="exp-reason">
+                        <strong>2. Tại sao chọn clocks?</strong><br>
+                        Đuôi 's' ở <em>clocks</em> phát âm là <span class="exp-ipa">[ /s/ ]</span> (vì sau phụ âm vô thanh /k/), 3 từ còn lại phát âm đuôi 's' là <span class="exp-ipa">[ /z/ ]</span>.
+                    </div>
+                `
+            },
+            {
+                id: 5,
+                instruction: "Choose the word which has a different sound in the part underlined.",
+                previewText: "notebook<u>s</u>   |   ruler<u>s</u>   |   eraser<u>s</u>   |   pencil<u>s</u>",
+                options: [
+                    { html: "A. notebook<u>s</u>", text: "A. notebooks", isCorrect: true },
+                    { html: "B. ruler<u>s</u>", text: "B. rulers", isCorrect: false },
+                    { html: "C. eraser<u>s</u>", text: "C. erasers", isCorrect: false },
+                    { html: "D. pencil<u>s</u>", text: "D. pencils", isCorrect: false }
+                ],
+                explanationHtml: `
+                    <p><strong>1. Phân tích 4 đáp án:</strong></p>
+                    <p>• <span class="exp-word">notebooks</span> (n) <span class="exp-ipa">[ /ˈnəʊtbʊks/ ]</span>: <span class="exp-meaning">vở ghi (kết thúc âm /k/ -> s đọc /s/)</span>.</p>
+                    <p>• <span class="exp-word">rulers</span> (n) <span class="exp-ipa">[ /ˈruːləz/ ]</span>: <span class="exp-meaning">thước kẻ (kết thúc âm hữu thanh -> s đọc /z/)</span>.</p>
+                    <p>• <span class="exp-word">erasers</span> (n) <span class="exp-ipa">[ /ɪˈreɪzəz/ ]</span>: <span class="exp-meaning">cục tẩy (kết thúc âm hữu thanh -> s đọc /z/)</span>.</p>
+                    <p>• <span class="exp-word">pencils</span> (n) <span class="exp-ipa">[ /ˈpenslz/ ]</span>: <span class="exp-meaning">bút chì (kết thúc âm /l/ -> s đọc /z/)</span>.</p>
+                    <div class="exp-reason">
+                        <strong>2. Tại sao chọn notebooks?</strong><br>
+                        Đuôi 's' ở <em>notebooks</em> phát âm là <span class="exp-ipa">[ /s/ ]</span>, trong khi các từ còn lại đuôi 's' phát âm là <span class="exp-ipa">[ /z/ ]</span>.
+                    </div>
+                `
+            },
+            {
+                id: 6,
+                instruction: "Choose the word which has a different sound in the part underlined.",
+                previewText: "grandparent<u>s</u>   |   brother<u>s</u>   |   uncle<u>s</u>   |   father<u>s</u>",
+                options: [
+                    { html: "A. grandparent<u>s</u>", text: "A. grandparents", isCorrect: true },
+                    { html: "B. brother<u>s</u>", text: "B. brothers", isCorrect: false },
+                    { html: "C. uncle<u>s</u>", text: "C. uncles", isCorrect: false },
+                    { html: "D. father<u>s</u>", text: "D. fathers", isCorrect: false }
+                ],
+                explanationHtml: `
+                    <p><strong>1. Phân tích 4 đáp án:</strong></p>
+                    <p>• <span class="exp-word">grandparents</span> (n) <span class="exp-ipa">[ /ˈɡrænpeərənts/ ]</span>: <span class="exp-meaning">ông bà (kết thúc /t/ -> s đọc /s/)</span>.</p>
+                    <p>• <span class="exp-word">brothers</span> (n) <span class="exp-ipa">[ /ˈbrʌðəz/ ]</span>: <span class="exp-meaning">anh em trai (kết thúc âm hữu thanh -> s đọc /z/)</span>.</p>
+                    <p>• <span class="exp-word">uncles</span> (n) <span class="exp-ipa">[ /ˈʌŋklz/ ]</span>: <span class="exp-meaning">chú/bác (kết thúc âm /l/ -> s đọc /z/)</span>.</p>
+                    <p>• <span class="exp-word">fathers</span> (n) <span class="exp-ipa">[ /ˈfɑːðəz/ ]</span>: <span class="exp-meaning">bố (kết thúc âm hữu thanh -> s đọc /z/)</span>.</p>
+                    <div class="exp-reason">
+                        <strong>2. Tại sao chọn grandparents?</strong><br>
+                        Đuôi 's' ở <em>grandparents</em> đứng sau phụ âm vô thanh /t/ phát âm là <span class="exp-ipa">[ /s/ ]</span>, các từ còn lại phát âm đuôi 's' là <span class="exp-ipa">[ /z/ ]</span>.
+                    </div>
+                `
+            },
+            {
+                id: 7,
+                instruction: "Choose the word which has a different sound in the part underlined.",
+                previewText: "c<u>a</u>ve   |   f<u>a</u>mous   |   l<u>a</u>te   |   v<u>a</u>lley",
+                options: [
+                    { html: "A. c<u>a</u>ve", text: "A. cave", isCorrect: false },
+                    { html: "B. f<u>a</u>mous", text: "B. famous", isCorrect: false },
+                    { html: "C. l<u>a</u>te", text: "C. late", isCorrect: false },
+                    { html: "D. v<u>a</u>lley", text: "D. valley", isCorrect: true }
+                ],
+                explanationHtml: `
+                    <p><strong>1. Phân tích 4 đáp án:</strong></p>
+                    <p>• <span class="exp-word">cave</span> (n) <span class="exp-ipa">[ /keɪv/ ]</span>: <span class="exp-meaning">hang động</span>.</p>
+                    <p>• <span class="exp-word">famous</span> (adj) <span class="exp-ipa">[ /ˈfeɪməs/ ]</span>: <span class="exp-meaning">nổi tiếng</span>.</p>
+                    <p>• <span class="exp-word">late</span> (adj/adv) <span class="exp-ipa">[ /leɪt/ ]</span>: <span class="exp-meaning">trễ, muộn</span>.</p>
+                    <p>• <span class="exp-word">valley</span> (n) <span class="exp-ipa">[ /ˈvæli/ ]</span>: <span class="exp-meaning">thung lũng</span>.</p>
+                    <div class="exp-reason">
+                        <strong>2. Tại sao chọn valley?</strong><br>
+                        Phần gạch chân ở <em>valley</em> phát âm là <span class="exp-ipa">[ /æ/ ]</span>, trong khi 3 từ còn lại đều phát âm là nguyên âm đôi <span class="exp-ipa">[ /eɪ/ ]</span>.
+                    </div>
+                `
+            },
+            {
+                id: 8,
+                instruction: "Choose the word which has a different sound in the part underlined.",
+                previewText: "<u>o</u>pen   |   d<u>o</u>ing   |   g<u>o</u>ing   |   c<u>o</u>ld",
+                options: [
+                    { html: "A. <u>o</u>pen", text: "A. open", isCorrect: false },
+                    { html: "B. d<u>o</u>ing", text: "B. doing", isCorrect: true },
+                    { html: "C. g<u>o</u>ing", text: "C. going", isCorrect: false },
+                    { html: "D. c<u>o</u>ld", text: "D. cold", isCorrect: false }
+                ],
+                explanationHtml: `
+                    <p><strong>1. Phân tích 4 đáp án:</strong></p>
+                    <p>• <span class="exp-word">open</span> (v) <span class="exp-ipa">[ /ˈəʊpən/ ]</span>: <span class="exp-meaning">mở out</span>.</p>
+                    <p>• <span class="exp-word">doing</span> (v) <span class="exp-ipa">[ /ˈduːɪŋ/ ]</span>: <span class="exp-meaning">đang làm</span>.</p>
+                    <p>• <span class="exp-word">going</span> (v) <span class="exp-ipa">[ /ˈɡəʊɪŋ/ ]</span>: <span class="exp-meaning">đang đi</span>.</p>
+                    <p>• <span class="exp-word">cold</span> (adj) <span class="exp-ipa">[ /kəʊld/ ]</span>: <span class="exp-meaning">lạnh</span>.</p>
+                    <div class="exp-reason">
+                        <strong>2. Tại sao chọn doing?</strong><br>
+                        Phần gạch chân ở <em>doing</em> phát âm là âm kéo dài <span class="exp-ipa">[ /uː/ ]</span>, trong khi các từ còn lại phát âm là <span class="exp-ipa">[ /əʊ/ ]</span>.
+                    </div>
+                `
+            },
+            {
+                id: 9,
+                instruction: "Choose the word which has a different sound in the part underlined.",
+                previewText: "h<u>a</u>nd   |   f<u>a</u>t   |   or<u>a</u>nge   |   bl<u>a</u>ck",
+                options: [
+                    { html: "A. h<u>a</u>nd", text: "A. hand", isCorrect: false },
+                    { html: "B. f<u>a</u>t", text: "B. fat", isCorrect: false },
+                    { html: "C. or<u>a</u>nge", text: "C. orange", isCorrect: true },
+                    { html: "D. bl<u>a</u>ck", text: "D. black", isCorrect: false }
+                ],
+                explanationHtml: `
+                    <p><strong>1. Phân tích 4 đáp án:</strong></p>
+                    <p>• <span class="exp-word">hand</span> (n) <span class="exp-ipa">[ /hænd/ ]</span>: <span class="exp-meaning">bàn tay</span>.</p>
+                    <p>• <span class="exp-word">fat</span> (adj) <span class="exp-ipa">[ /fæt/ ]</span>: <span class="exp-meaning">béo, mập</span>.</p>
+                    <p>• <span class="exp-word">orange</span> (n) <span class="exp-ipa">[ /ˈɒrɪndʒ/ ]</span>: <span class="exp-meaning">quả cam/màu cam</span>.</p>
+                    <p>• <span class="exp-word">black</span> (adj) <span class="exp-ipa">[ /blæk/ ]</span>: <span class="exp-meaning">màu đen</span>.</p>
+                    <div class="exp-reason">
+                        <strong>2. Tại sao chọn orange?</strong><br>
+                        Phần gạch chân ở <em>orange</em> phát âm là nguyên âm ngắn <span class="exp-ipa">[ /ɪ/ ]</span>, các từ còn lại đều phát âm là nguyên âm <span class="exp-ipa">[ /æ/ ]</span>.
+                    </div>
+                `
+            },
+            {
+                id: 10,
+                instruction: "Choose the word which has a different sound in the part underlined.",
+                previewText: "f<u>u</u>nny   |   c<u>u</u>rious   |   ch<u>u</u>bby   |   l<u>u</u>nch",
+                options: [
+                    { html: "A. f<u>u</u>nny", text: "A. funny", isCorrect: false },
+                    { html: "B. c<u>u</u>rious", text: "B. curious", isCorrect: true },
+                    { html: "C. ch<u>u</u>bby", text: "C. chubby", isCorrect: false },
+                    { html: "D. l<u>u</u>nch", text: "D. lunch", isCorrect: false }
+                ],
+                explanationHtml: `
+                    <p><strong>1. Phân tích 4 đáp án:</strong></p>
+                    <p>• <span class="exp-word">funny</span> (adj) <span class="exp-ipa">[ /ˈfʌni/ ]</span>: <span class="exp-meaning">vui tính</span>.</p>
+                    <p>• <span class="exp-word">curious</span> (adj) <span class="exp-ipa">[ /ˈkjʊəriəs/ ]</span>: <span class="exp-meaning">tò mò, hiếu kỳ</span>.</p>
+                    <p>• <span class="exp-word">chubby</span> (adj) <span class="exp-ipa">[ /ˈtʃʌbi/ ]</span>: <span class="exp-meaning">mũm mĩm</span>.</p>
+                    <p>• <span class="exp-word">lunch</span> (n) <span class="exp-ipa">[ /lʌntʃ/ ]</span>: <span class="exp-meaning">bữa ăn trưa</span>.</p>
+                    <div class="exp-reason">
+                        <strong>2. Tại sao chọn curious?</strong><br>
+                        Phần gạch chân ở <em>curious</em> phát âm là <span class="exp-ipa">[ /jʊə/ ]</span>, trong khi các từ còn lại phát âm là <span class="exp-ipa">[ /ʌ/ ]</span>.
+                    </div>
+                `
+            },
+            // EX2 - STRESS PATTERN
+            {
+                id: 11,
+                instruction: "Choose the word which has a different stress pattern from the other three.",
+                previewText: "rubbish   |   dislike   |   money   |   lucky",
+                options: [
+                    { html: "A. rubbish", text: "A. rubbish", isCorrect: false },
+                    { html: "B. dislike", text: "B. dislike", isCorrect: true },
+                    { html: "C. money", text: "C. money", isCorrect: false },
+                    { html: "D. lucky", text: "D. lucky", isCorrect: false }
+                ],
+                explanationHtml: `
+                    <p><strong>1. Phân tích trọng âm 4 đáp án:</strong></p>
+                    <p>• <span class="exp-word">rubbish</span> (n) <span class="exp-ipa">[ /ˈrʌbɪʃ/ ]</span>: <span class="exp-meaning">trọng âm 1</span>.</p>
+                    <p>• <span class="exp-word">dislike</span> (v) <span class="exp-ipa">[ /dɪsˈlaɪk/ ]</span>: <span class="exp-meaning">trọng âm 2</span>.</p>
+                    <p>• <span class="exp-word">money</span> (n) <span class="exp-ipa">[ /ˈmʌni/ ]</span>: <span class="exp-meaning">trọng âm 1</span>.</p>
+                    <p>• <span class="exp-word">lucky</span> (adj) <span class="exp-ipa">[ /ˈlʌki/ ]</span>: <span class="exp-meaning">trọng âm 1</span>.</p>
+                    <div class="exp-reason">
+                        <strong>2. Tại sao chọn dislike?</strong><br>
+                        Từ <em>dislike</em> có trọng âm rơi vào âm tiết thứ 2, trong khi 3 từ còn lại đều có trọng âm rơi vào âm tiết thứ 1.
+                    </div>
+                `
+            },
+            {
+                id: 12,
+                instruction: "Choose the word which has a different stress pattern from the other three.",
+                previewText: "forget   |   early   |   physics   |   lesson",
+                options: [
+                    { html: "A. forget", text: "A. forget", isCorrect: true },
+                    { html: "B. early", text: "B. early", isCorrect: false },
+                    { html: "C. physics", text: "C. physics", isCorrect: false },
+                    { html: "D. lesson", text: "D. lesson", isCorrect: false }
+                ],
+                explanationHtml: `
+                    <p><strong>1. Phân tích trọng âm 4 đáp án:</strong></p>
+                    <p>• <span class="exp-word">forget</span> (v) <span class="exp-ipa">[ /fəˈɡet/ ]</span>: <span class="exp-meaning">trọng âm 2</span>.</p>
+                    <p>• <span class="exp-word">early</span> (adj/adv) <span class="exp-ipa">[ /ˈɜːli/ ]</span>: <span class="exp-meaning">trọng âm 1</span>.</p>
+                    <p>• <span class="exp-word">physics</span> (n) <span class="exp-ipa">[ /ˈfɪzɪks/ ]</span>: <span class="exp-meaning">trọng âm 1</span>.</p>
+                    <p>• <span class="exp-word">lesson</span> (n) <span class="exp-ipa">[ /ˈlesn/ ]</span>: <span class="exp-meaning">trọng âm 1</span>.</p>
+                    <div class="exp-reason">
+                        <strong>2. Tại sao chọn forget?</strong><br>
+                        Từ <em>forget</em> là động từ có trọng âm rơi vào âm tiết 2, các từ còn lại đều có trọng âm rơi vào âm tiết thứ 1.
+                    </div>
+                `
+            },
+            {
+                id: 13,
+                instruction: "Choose the word which has a different stress pattern from the other three.",
+                previewText: "delay   |   swimming   |   money   |   compass",
+                options: [
+                    { html: "A. delay", text: "A. delay", isCorrect: true },
+                    { html: "B. swimming", text: "B. swimming", isCorrect: false },
+                    { html: "C. money", text: "C. money", isCorrect: false },
+                    { html: "D. compass", text: "D. compass", isCorrect: false }
+                ],
+                explanationHtml: `
+                    <p><strong>1. Phân tích trọng âm 4 đáp án:</strong></p>
+                    <p>• <span class="exp-word">delay</span> (v) <span class="exp-ipa">[ /dɪˈleɪ/ ]</span>: <span class="exp-meaning">trọng âm 2</span>.</p>
+                    <p>• <span class="exp-word">swimming</span> (n) <span class="exp-ipa">[ /ˈswɪmɪŋ/ ]</span>: <span class="exp-meaning">trọng âm 1</span>.</p>
+                    <p>• <span class="exp-word">money</span> (n) <span class="exp-ipa">[ /ˈmʌni/ ]</span>: <span class="exp-meaning">trọng âm 1</span>.</p>
+                    <p>• <span class="exp-word">compass</span> (n) <span class="exp-ipa">[ /ˈkʌmpəs/ ]</span>: <span class="exp-meaning">trọng âm 1</span>.</p>
+                    <div class="exp-reason">
+                        <strong>2. Tại sao chọn delay?</strong><br>
+                        Từ <em>delay</em> có trọng âm rơi vào âm tiết thứ 2, các từ còn lại đều có trọng âm rơi vào âm tiết thứ 1.
+                    </div>
+                `
+            },
+            {
+                id: 14,
+                instruction: "Choose the word which has a different stress pattern from the other three.",
+                previewText: "creative   |   interview   |   equipment   |   remember",
+                options: [
+                    { html: "A. creative", text: "A. creative", isCorrect: false },
+                    { html: "B. interview", text: "B. interview", isCorrect: true },
+                    { html: "C. equipment", text: "C. equipment", isCorrect: false },
+                    { html: "D. remember", text: "D. remember", isCorrect: false }
+                ],
+                explanationHtml: `
+                    <p><strong>1. Phân tích trọng âm 4 đáp án:</strong></p>
+                    <p>• <span class="exp-word">creative</span> (adj) <span class="exp-ipa">[ /kriˈeɪtɪv/ ]</span>: <span class="exp-meaning">trọng âm 2</span>.</p>
+                    <p>• <span class="exp-word">interview</span> (n/v) <span class="exp-ipa">[ /ˈɪntəvjuː/ ]</span>: <span class="exp-meaning">trọng âm 1</span>.</p>
+                    <p>• <span class="exp-word">equipment</span> (n) <span class="exp-ipa">[ /ɪˈkwɪpmənt/ ]</span>: <span class="exp-meaning">trọng âm 2</span>.</p>
+                    <p>• <span class="exp-word">remember</span> (v) <span class="exp-ipa">[ /rɪˈmembər/ ]</span>: <span class="exp-meaning">trọng âm 2</span>.</p>
+                    <div class="exp-reason">
+                        <strong>2. Tại sao chọn interview?</strong><br>
+                        Từ <em>interview</em> có trọng âm rơi vào âm tiết thứ 1, trong khi 3 từ còn lại đều có trọng âm rơi vào âm tiết thứ 2.
+                    </div>
+                `
+            },
+            {
+                id: 15,
+                instruction: "Choose the word which has a different stress pattern from the other three.",
+                previewText: "overseas   |   beautiful   |   difficult   |   miracle",
+                options: [
+                    { html: "A. overseas", text: "A. overseas", isCorrect: true },
+                    { html: "B. beautiful", text: "B. beautiful", isCorrect: false },
+                    { html: "C. difficult", text: "C. difficult", isCorrect: false },
+                    { html: "D. miracle", text: "D. miracle", isCorrect: false }
+                ],
+                explanationHtml: `
+                    <p><strong>1. Phân tích trọng âm 4 đáp án:</strong></p>
+                    <p>• <span class="exp-word">overseas</span> (adj/adv) <span class="exp-ipa">[ /ˌəʊvəˈsiːz/ ]</span>: <span class="exp-meaning">trọng âm 3</span>.</p>
+                    <p>• <span class="exp-word">beautiful</span> (adj) <span class="exp-ipa">[ /ˈbjuːtɪfl/ ]</span>: <span class="exp-meaning">trọng âm 1</span>.</p>
+                    <p>• <span class="exp-word">difficult</span> (adj) <span class="exp-ipa">[ /ˈdɪfɪkəlt/ ]</span>: <span class="exp-meaning">trọng âm 1</span>.</p>
+                    <p>• <span class="exp-word">miracle</span> (n) <span class="exp-ipa">[ /ˈmɪrəkl/ ]</span>: <span class="exp-meaning">trọng âm 1</span>.</p>
+                    <div class="exp-reason">
+                        <strong>2. Tại sao chọn overseas?</strong><br>
+                        Từ <em>overseas</em> có trọng âm rơi vào âm tiết thứ 3, các từ còn lại trọng âm rơi vào âm tiết thứ 1.
+                    </div>
+                `
+            }
+        ];
+
+        // Shuffle Function
+        function shuffleArray(array) {
+            const arr = [...array];
+            for (let i = arr.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [arr[i], arr[j]] = [arr[j], arr[i]];
+            }
+            return arr;
+        }
+
+        let userAnswers = {};
+
+        function renderQuiz() {
+            const container = document.getElementById('quiz-container');
+            container.innerHTML = '';
+
+            quizData.forEach((item, index) => {
+                const shuffledOpts = shuffleArray(item.options);
+                
+                const card = document.createElement('div');
+                card.className = 'question-card';
+                card.id = `q-card-${index}`;
+
+                card.innerHTML = `
+                    <div class="question-header">
+                        <div class="question-num">🌟 CÂU ${item.id}:</div>
+                        <div class="word-list-preview">${item.previewText}</div>
+                    </div>
+                    <div class="options-list" id="opts-${index}">
+                        ${shuffledOpts.map((opt) => `
+                            <button class="option-btn" onclick="checkAnswer(${index}, ${opt.isCorrect}, this)">
+                                ${opt.html}
+                            </button>
+                        `).join('')}
+                    </div>
+                    <div class="explanation-card" id="exp-${index}">
+                        <div class="exp-header">💡 GIẢI THÍCH CHI TIẾT TỪ MS LÊ HẰNG:</div>
+                        <div class="exp-content">${item.explanationHtml}</div>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function checkAnswer(qIdx, isCorrect, btnElement) {
+            if (userAnswers[qIdx] !== undefined) return; // Prevent double click
+
+            userAnswers[qIdx] = isCorrect;
+
+            const list = document.getElementById(`opts-${qIdx}`);
+            const buttons = list.querySelectorAll('.option-btn');
+
+            buttons.forEach(btn => btn.disabled = true);
+
+            if (isCorrect) {
+                btnElement.classList.add('correct');
+                playCorrectSound();
+            } else {
+                btnElement.classList.add('wrong');
+                playWrongSound();
+
+                // Highlight correct option
+                const qData = quizData[qIdx];
+                const targetOpt = qData.options.find(o => o.isCorrect);
+                buttons.forEach(btn => {
+                    if (btn.innerText.trim() === targetOpt.text.trim()) {
+                        btn.classList.add('correct');
+                    }
+                });
+            }
+
+            // Show explanation immediately
+            document.getElementById(`exp-${qIdx}`).style.display = 'block';
+        }
+
+        function showSummary() {
+            const total = quizData.length;
+            const answered = Object.keys(userAnswers).length;
+            
+            if (answered < total) {
+                alert(`Bạn mới làm ${answered}/${total} câu. Hãy tiếp tục hoàn thành các câu còn lại nhé!`);
+                return;
+            }
+
+            let correctCount = 0;
+            for (let k in userAnswers) {
+                if (userAnswers[k] === true) correctCount++;
+            }
+
+            document.getElementById('scoreText').innerText = `${correctCount} / ${total}`;
+            
+            let praise = "Hãy đọc lại các phần giải thích chi tiết để học thêm từ vựng nhé!";
+            if (correctCount === total) praise = "Xuất sắc tuyệt đối! Bạn đạt điểm tối đa! 🌟🌟🌟";
+            else if (correctCount >= 11) praise = "Khá lắm! Bạn đã hoàn thành bài test với kết quả rất cao! 🎉";
+            else if (correctCount >= 8) praise = "Khá tốt, hãy nhớ ghi chép lại các câu làm sai nhé! 📝";
+            
+            document.getElementById('praiseText').innerText = praise;
+            document.getElementById('scoreModal').style.display = 'flex';
+        }
+
+        function closeModal() {
+            document.getElementById('scoreModal').style.display = 'none';
+        }
+
+        window.onload = renderQuiz;
+    </script>
+</body>
+</html>
